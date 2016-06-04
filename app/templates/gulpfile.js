@@ -1,14 +1,19 @@
-var gulp = require('gulp');
+var gulp = require('gulp-help')(require('gulp'));
 var concat = require('gulp-concat');
 var plumber = require('gulp-plumber');
 var browserify = require('gulp-browserify');
 var webserver = require('gulp-webserver');
 var _ = require('lodash');
 
+function unloadModule(module) {
+  var name = require.resolve(module);
+  delete require.cache[name];
+}
+
 /**
  * Copy resources (html, css, images)
  */
-gulp.task('copy-resources', function() {
+gulp.task('copy-resources', 'Copy resources to target folder', function() {
   return gulp
     .src([ 'src/main/**/*', '!**/*.js' ], { nodir: true })
     .pipe(plumber({ errorHandler: err => { console.log(err.message); this.emit('end'); } }))
@@ -18,6 +23,7 @@ gulp.task('copy-resources', function() {
 function getBowerPackageIds() {
   var bowerManifest = {};
   try {
+    unloadModule('./bower.json');
     manifest = require('./bower.json');
   } catch (e) {
     // does not have a bower.json manifest
@@ -30,6 +36,7 @@ function getBowerMains(module) {
     return './bower_components/' + module + '/' + file.substr(0, file.indexOf('.js')) + '.min.js';
   }
 
+  unloadModule('./bower_components/' + module + '/bower.json');
   var manifest = require('./bower_components/' + module + '/bower.json');
   if (typeof manifest.main === 'string') 
     return [ makeMinFileName(manifest.main) ]
@@ -40,7 +47,7 @@ function getBowerMains(module) {
 /**
  * Create vendor bundle from bower components
  */
-gulp.task('compile:vendor', function() {
+gulp.task('compile:vendor', 'Create vendor.js with Bower packages', function() {
   var modules = _.flatten(_.map(getBowerPackageIds(), getBowerMains));
 
   return gulp
@@ -57,6 +64,7 @@ function getBowerModule(module) {
     return file.substr(0, file.indexOf('.'));
   }
 
+  unloadModule('./bower_components/' + module + '/bower.json');
   var manifest = require('./bower_components/' + module + '/bower.json');
   if (typeof manifest.main === 'string')
     return [ extractFileWithoutExt(manifest.main) ];
@@ -67,7 +75,7 @@ function getBowerModule(module) {
 /**
  * Compile application sources
  */
-gulp.task('compile:main', function() {
+gulp.task('compile:main', 'Create index.js with application content', function() {
   var externals = _.flatten(_.map(getBowerPackageIds(), getBowerModule));
   return gulp
     .src('src/main/index.js')
@@ -79,20 +87,21 @@ gulp.task('compile:main', function() {
 /**
  * Compile the application from resources, vendor bundles and application sources
  */
-gulp.task('compile', [ 'copy-resources', 'compile:vendor', 'compile:main' ]);
+gulp.task('compile', 'Compile everything', [ 'copy-resources', 'compile:vendor', 'compile:main' ]);
 
 /**
  * Watch for changes and recompile
  */
-gulp.task('watch', [ 'compile' ], function() {
+gulp.task('watch', 'Watch for file changes and execute appropriate task when changes are detected', [ 'compile' ], function() {
   gulp.watch([ 'src/main/**/*', '!**/*.js' ], [ 'copy-resources' ]);
   gulp.watch('src/main/**/*.js', [ 'compile:main' ]);
+  gulp.watch('bower.json', [ 'compile:vendor' ]);
 });
 
 /**
  * Simple server with live reload for development
  */
-gulp.task('server', [ 'watch' ], function() {
+gulp.task('server', 'Start embedded server for development', [ 'watch' ], function() {
   gulp
     .src('target')
     .pipe(plumber({ errorHandler: err => { console.log(err.message); this.emit('end'); } }))
@@ -106,5 +115,3 @@ gulp.task('server', [ 'watch' ], function() {
       ]
     }));
 });
-
-gulp.task('default', [ 'compile' ]);

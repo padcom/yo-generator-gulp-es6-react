@@ -31,8 +31,7 @@ module.exports = yeoman.Base.extend({
     },
 
     createApplicationFiles: function() {
-      this._copy('src/main/index.html');
-      this._copy('src/main/index.js');
+      this.directory('src', 'src');
     }
   },
 
