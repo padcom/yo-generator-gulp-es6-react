@@ -1,5 +1,4 @@
 var _ = require('lodash');
-var path = require('path');
 var yeoman = require('yeoman-generator');
 
 var variables = {
