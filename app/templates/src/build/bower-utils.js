@@ -6,7 +6,7 @@ function unloadModule(module) {
 }
 
 function getBowerPackageIds() {
-  var bowerManifest = {};
+  var manifest = {};
   try {
     unloadModule('../../bower.json');
     manifest = require('../../bower.json');
