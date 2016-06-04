@@ -1,3 +1,1 @@
-import { Dispatcher } from 'flux';
-
-export default new Dispatcher();
+export default new Flux.Dispatcher();
