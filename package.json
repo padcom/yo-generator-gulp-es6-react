@@ -1,0 +1,15 @@
+{
+  "name": "generator-gulp-es6-react",
+  "version": "0.1.0",
+  "description": "Generator for React projects build with Gulp",
+  "files": [
+    "app"
+  ],
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "license": "Apache 2.0",
+  "dependencies": {
+    "yeoman-generator": "^0.21.2"
+  }
+}
