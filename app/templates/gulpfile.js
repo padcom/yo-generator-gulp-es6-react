@@ -2,7 +2,6 @@ var gulp = require('gulp-help')(require('gulp'));
 var concat = require('gulp-concat');
 var plumber = require('gulp-plumber');
 var browserify = require('gulp-browserify');
-var uglify = require('gulp-uglify');
 var webserver = require('gulp-webserver');
 var _ = require('lodash');
 var stream = require('stream');
