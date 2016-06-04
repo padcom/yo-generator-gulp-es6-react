@@ -18,7 +18,12 @@ function getBowerPackageIds() {
 
 function getBowerMains(module) {
   function makeMinFileName(file) {
-    return './bower_components/' + module + '/' + file.substr(0, file.indexOf('.js')) + '.min.js';
+    const env = process.env.NODE_ENV || 'development';
+    if (env === 'production') {
+      return './bower_components/' + module + '/' + file.substr(0, file.indexOf('.js')) + '.min.js';
+    } else {
+      return './bower_components/' + module + '/' + file;
+    }
   }
 
   unloadModule('../../bower_components/' + module + '/bower.json');

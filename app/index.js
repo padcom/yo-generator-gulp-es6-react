@@ -5,6 +5,7 @@ var variables = {
   appname: null,
   version: null,
   react_version: '^15.1.0',
+  flux_version: '^2.1.1',
 }
 
 module.exports = yeoman.Base.extend({

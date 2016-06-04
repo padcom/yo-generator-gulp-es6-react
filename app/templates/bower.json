@@ -14,5 +14,6 @@
   ],
   "dependencies": {
     "react": "<%= react_version %>"
+    "flux": "<%= flux_version %>"
   }
 }
