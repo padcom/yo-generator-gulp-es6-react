@@ -10,7 +10,7 @@ var _ = require('lodash');
  */
 gulp.task('copy-resources', function() {
   return gulp
-    .src([ 'src/main/**/*', '!**/*.js' ])
+    .src([ 'src/main/**/*', '!**/*.js' ], { nodir: true })
     .pipe(plumber({ errorHandler: err => { console.log(err.message); this.emit('end'); } }))
     .pipe(gulp.dest('target'));
 });

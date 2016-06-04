@@ -1,1 +1,16 @@
-ReactDOM.render(<h1>Hello, world!</h1>, document.getElementById('react-output'));
+import dispatcher from './dispatcher';
+
+import TitleStore from './stores/title-store';
+import * as TitleActions from './actions/title-actions';
+
+import App from './components/app';
+
+// This makes certain things available in runtime which is good for debugging
+window.Application = {
+  dispatcher,
+  TitleStore,
+  TitleActions
+}
+
+// Render the application under #react-output
+ReactDOM.render(<App/>, document.getElementById('react-output'));
