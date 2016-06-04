@@ -28,7 +28,6 @@ module.exports = yeoman.Base.extend({
       this._copy('gulpfile.js');
       this._copy('bower.json');
       this._copy('.babelrc');
-      this._copy('.gitignore');
     },
 
     createApplicationFiles: function() {
