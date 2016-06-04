@@ -13,7 +13,7 @@
     "tests"
   ],
   "dependencies": {
-    "react": "<%= react_version %>"
+    "react": "<%= react_version %>",
     "flux": "<%= flux_version %>"
   }
 }
