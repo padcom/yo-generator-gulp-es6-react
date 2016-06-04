@@ -1,6 +1,6 @@
 {
   "name": "generator-gulp-es6-react",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Matthias Hryniszak",
   "description": "Generator for React projects build with Gulp",
   "files": [
