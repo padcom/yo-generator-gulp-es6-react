@@ -5,10 +5,7 @@ var browserify = require('gulp-browserify');
 var webserver = require('gulp-webserver');
 var _ = require('lodash');
 
-function unloadModule(module) {
-  var name = require.resolve(module);
-  delete require.cache[name];
-}
+var bower = require('./src/build/bower-utils');
 
 /**
  * Copy resources (html, css, images)
@@ -20,35 +17,11 @@ gulp.task('copy-resources', 'Copy resources to target folder', function() {
     .pipe(gulp.dest('target'));
 });
 
-function getBowerPackageIds() {
-  var bowerManifest = {};
-  try {
-    unloadModule('./bower.json');
-    manifest = require('./bower.json');
-  } catch (e) {
-    // does not have a bower.json manifest
-  }
-  return _.keys(manifest.dependencies) || [];
-}
-
-function getBowerMains(module) {
-  function makeMinFileName(file) {
-    return './bower_components/' + module + '/' + file.substr(0, file.indexOf('.js')) + '.min.js';
-  }
-
-  unloadModule('./bower_components/' + module + '/bower.json');
-  var manifest = require('./bower_components/' + module + '/bower.json');
-  if (typeof manifest.main === 'string') 
-    return [ makeMinFileName(manifest.main) ]
-  else
-    return _.map(manifest.main, makeMinFileName);
-}
-
 /**
  * Create vendor bundle from bower components
  */
 gulp.task('compile:vendor', 'Create vendor.js with Bower packages', function() {
-  var modules = _.flatten(_.map(getBowerPackageIds(), getBowerMains));
+  var modules = _.flatten(_.map(bower.getBowerPackageIds(), bower.getBowerMains));
 
   return gulp
     .src(modules)
@@ -57,26 +30,11 @@ gulp.task('compile:vendor', 'Create vendor.js with Bower packages', function() {
     .pipe(gulp.dest('target'));
 });
 
-function getBowerModule(module) {
-  function extractFileWithoutExt(file) {
-    var parts = file.split('/');
-    file = parts[parts.length - 1];
-    return file.substr(0, file.indexOf('.'));
-  }
-
-  unloadModule('./bower_components/' + module + '/bower.json');
-  var manifest = require('./bower_components/' + module + '/bower.json');
-  if (typeof manifest.main === 'string')
-    return [ extractFileWithoutExt(manifest.main) ];
-  else
-    return _.map(manifest.main, extractFileWithoutExt);
-}
-
 /**
  * Compile application sources
  */
 gulp.task('compile:main', 'Create index.js with application content', function() {
-  var externals = _.flatten(_.map(getBowerPackageIds(), getBowerModule));
+  var externals = _.flatten(_.map(bower.getBowerPackageIds(), bower.getBowerModule));
   return gulp
     .src('src/main/index.js')
     .pipe(plumber({ errorHandler: err => { console.log(err.message); this.emit('end'); } }))
