@@ -1,7 +1,6 @@
-import { EventEmitter } from 'events';
-import dispatcher from '../dispatcher';
+import Store from '../framework/store';
 
-class TitleStore extends EventEmitter {
+class TitleStore extends Store {
   constructor() {
     super();
     this.title = "Hello, world!";
@@ -16,7 +15,7 @@ class TitleStore extends EventEmitter {
     this.emit("title-changed");
   }
 
-  handleAction(action) {
+  handler(action) {
     switch(action.type) {
       case "TITLE_CHANGED": {
         this.setTitle(action.title);
@@ -25,8 +24,4 @@ class TitleStore extends EventEmitter {
   }
 }
 
-var titleStore = new TitleStore();
-window.titleStore = titleStore;
-dispatcher.register(titleStore.handleAction.bind(titleStore));
-
-export default titleStore;
+export default new TitleStore();

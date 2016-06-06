@@ -1,4 +1,4 @@
-import dispatcher from '../dispatcher';
+import dispatcher from '../framework/dispatcher';
 
 export function titleChanged(title) {
   dispatcher.dispatch({

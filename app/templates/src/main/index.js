@@ -1,4 +1,4 @@
-import dispatcher from './dispatcher';
+import dispatcher from './framework/dispatcher';
 
 import TitleStore from './stores/title-store';
 import * as TitleActions from './actions/title-actions';
